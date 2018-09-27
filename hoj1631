@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+struct cat
+{
+    int minutes;
+    int id;
+    int pos;
+    int times;
+};
+bool cmp(cat a,cat b)
+{
+    if(a.pos==b.pos&&a.minutes==b.minutes)
+    {
+        return a.id>b.id;
+    }
+    else if(a.pos==b.pos)
+    {
+        return a.minutes<b.minutes;
+    }
+    else
+    {
+        return a.pos>b.pos;
+    }
+}
+int main()
+{
+    int m,n,x,i,j,flag=0,num;
+    while(~scanf("%d%d%d",&m,&n,&x))
+    {
+        num=0;
+        cat cats[n];
+        for(i=0; i<n; i++)
+        {
+            cats[i].id=i;
+            cin>>cats[i].minutes;
+            cats[i].pos=1;
+            cats[i].times=0;
+        }
+        j=1;
+        while(j<=x)
+        {
+            sort(cats,cats+n,cmp);
+            j++;
+            for(i=0; i<n; i++)
+            {
+                if(cats[i].pos==1&&m>0)
+                {
+                    cats[i].pos=0;
+                    cats[i].times=cats[i].minutes;
+                    m--;
+                }
+                if(cats[i].pos==0)
+                {
+                    cats[i].times--;
+//                    cout<<cats[i].minutes;
+                    if(cats[i].times==0)
+                    {
+                        cats[i].pos=1;
+                    }
+                }
+            }
+        }
+        for(i=n-1; i>=0; i--)
+        {
+            if(cats[i].pos==0)
+            {
+                num++;
+            }
+        }
+        cout<<m<<' '<<num<<endl;
+    }
+    return 0;
+}
