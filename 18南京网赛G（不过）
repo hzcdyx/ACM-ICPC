@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+long long jiecheng(long long n)
+{
+    if(n==1)
+    {
+        return 1;
+    }
+    else{
+        return n*jiecheng(n-1);
+    }
+}
+int main()
+{
+    long long a;
+    int n,m,i,t,q,j=0;
+    cin>>n>>m;
+    int k[n];
+    int vis[n];
+    memset(vis,0,sizeof(vis));
+    for(i=1;i<=n;i++)
+    {
+       cin>>k[i];
+    }
+    cin>>q;
+    int d[q];
+    int num[101000];//remain room num
+    int re[101000];//remain lamp num
+    for(i=0;i<q;i++)
+    {
+        cin>>d[i];
+        if(d[i]>j)
+        {
+            j=d[i];
+        }
+    }
+    int r=0;
+    int mo=0;
+    for(i=1;i<=j;i++)
+    {
+
+        if(mo!=n)
+        {
+        r+=m;
+        for(t=1;t<=n;t++)
+        {
+        if(!vis[t]&&(r>=k[t]))
+        {
+
+            vis[t]=1;
+            r-=k[t];
+            mo++;
+        }
+        }
+        }
+        num[i]=mo;
+        re[i]=r;
+    }
+    for(i=0;i<q;i++)
+    {
+        cout<<num[d[i]]<<' '<<re[d[i]]<<endl;
+    }
+    return 0;
+}
