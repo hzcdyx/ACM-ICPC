@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+using namespace std;
+int w,h,res;
+int a[25][25];
+int visit[25][25];
+struct milk
+{
+    int start;
+    int endt;
+    int num;
+};
+bool cmp(milk a,milk b)
+{
+    return a.start<b.start;
+}
+int main()
+{
+    int n,m,r,i,j,mmax,res=0;
+    cin>>n>>m>>r;
+    milk t[m+5];
+    int dp[m+5];
+    for(i=0; i<m; i++)
+    {
+        cin>>t[i].start>>t[i].endt>>t[i].num;
+    }
+    sort(t,t+m,cmp);
+    memset(dp,0,sizeof(dp));
+    for(i=0; i<m; i++)
+    {
+        dp[i]=t[i].num;
+        for(j=0;j<i;j++)
+        {
+            if(t[j].endt+r<=t[i].start)
+            {
+                dp[i]=max(dp[i],dp[j]+t[i].num);
+                res=max(res,dp[i]);
+            }
+        }
+    }
+    cout<<res;
+    return 0;
+}
