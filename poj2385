@@ -1,0 +1,97 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+using namespace std;
+int w,h,res;
+int a[25][25];
+int visit[25][25];
+void dfs(int x,int y)
+{
+    visit[x][y]=1;
+    res+=1;
+//    cout<<x<<' '<<y<<endl;
+//cout<<visit[x+1][y]<<' '<<a[x+1][y]<<' '<<(x<h-1&&!(visit[x+1][y])&&(a[x+1][y]==1));
+    if(x<h-1&&!visit[x+1][y]&&(a[x+1][y]==1))
+    {
+        dfs(x+1,y);
+    }
+    if(y<w-1&&!visit[x][y+1]&&(a[x][y+1]==1))
+    {
+        dfs(x,y+1);
+    }
+    if(x>0&&!visit[x-1][y]&&(a[x-1][y]==1))
+    {
+        dfs(x-1,y);
+    }
+    if(y>0&&!visit[x][y-1]&&(a[x][y-1]==1))
+    {
+        dfs(x,y-1);
+    }
+    return ;
+}
+int main()
+{
+    int i,j,n,t,w,flag=0;
+    cin>>t>>w;
+    int a[t];
+    int res=1;
+    for(i=0; i<t; i++)
+    {
+        cin>>a[i];
+    }
+    int dp[1100][35];
+    fill(dp[0],dp[0]+1100*35,1);
+    if(a[0]==1)
+    {
+        flag=1;
+        for(j=0; j<=w; j++)
+        {
+            dp[0][j]=flag%2;
+            flag=flag+1;
+        }
+//        for(j=w; j>=0; j--)
+//        {
+//            dp[0][j]=flag%2;
+//
+//        }
+    }
+    else
+    {
+        flag=0;
+        for(j=0; j<=w; j++)
+        {
+            dp[0][j]=flag%2;
+            flag=1;
+        }
+    }
+    for(i=1; i<t; i++)
+    {
+//        for(j=w; j>=0; j--)
+//        {
+            for(j=0;j<=w;j++)
+            {
+            if((j+1)%2==(a[i]%2))
+            {
+                dp[i][j]=max(dp[i-1][j],dp[i-1][j-1]);
+                dp[i][j]=dp[i][j]+1;
+                res=max(res,dp[i][j]);
+            }
+            else
+            {
+                dp[i][j]=max(dp[i-1][j],dp[i-1][j-1]);
+                res=max(res,dp[i][j]);
+            }
+            }
+//            if(j<w)
+//            {
+//                dp[i][j]=max(dp[i-1][j+1],dp[i-1][j]);
+//            }
+//            else{
+//                dp[i][j]=max(dp[i][j],dp[i-1][j]);
+//            }
+
+//        }
+    }
+    cout<<res;
+    return 0;
+}
