@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+using namespace std;
+typedef pair<int,int> p;
+
+int main()
+{
+    int c,l,i,j,t,v,res=0,temp;
+    cin>>c>>l;
+    p cow[c+5];
+    p lis[l+5];
+    for(i=0;i<c;i++)
+    {
+        cin>>cow[i].first>>cow[i].second;
+    }
+    for(i=0;i<l;i++)
+    {
+        cin>>lis[i].first>>lis[i].second;
+    }
+    sort(cow,cow+c);
+    sort(lis,lis+l);
+    priority_queue<int,vector<int>,greater<int> >que;
+    j=0;
+    for(i=0;i<l;i++)
+    {
+        while(j<c&&(lis[i].first>=cow[j].first))
+        {
+            que.push(cow[j].second);
+            j++;
+        }
+        while(lis[i].second&&(!que.empty()))
+        {
+            temp=que.top();
+            if(temp>=lis[i].first)
+            {
+               res++;
+               que.pop();
+               lis[i].second--;
+            }
+            else{
+                que.pop();
+            }
+        }
+    }
+    cout<<res;
+    return 0;
+}
