@@ -232,7 +232,102 @@ void in()
 
 }
 
- 
+ 更改后接收
+ #include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+using namespace std;
+typedef pair<int,int> p;
+const int MAX=400;
+int m[MAX][MAX];
+int dir[5][2] = {{0,0},{0,1},{0,-1},{1,0},{-1,0}};
+struct node
+{
+    int x;
+    int y;
+    int t;
+};
+queue<node> a;
+int bfs()
+{
+    if(m[0][0]==0)
+    {
+        return -1;
+    }
+    else
+    {
+        node t;
+        t.x=0;
+        t.y=0;
+        t.t=0;
+        a.push(t);
+        while(!a.empty())
+        {
+            node c=a.front();
+            a.pop();
+//            cout<<c.x<<c.y<<endl;
+            if(m[c.x][c.y]==1100)
+            {
+                return c.t;
+            }
+            m[c.x][c.y]=c.t;
+            for(int i=0;i<5;i++)
+            {
+                node s;
+                s.x=c.x+dir[i][0];
+                s.y=c.y+dir[i][1];
+                s.t=c.t+1;
+                if(s.x<0||s.x>MAX||s.y<0||s.y>MAX)
+                {
+                    continue;
+                }
+                if(m[s.x][s.y]==1100)
+                {
+                    return s.t;
+                }
+                if(s.t>=m[s.x][s.y])
+                {
+                    continue;
+                }
+                m[s.x][s.y]=s.t;
+                a.push(s);
+            }
+        }
+    }
+    return -1;
+}
+int main()
+{
+    int c,l,i,j,v,res=0,n,temp;
+    fill(m[0],m[0]+350*350,1100);
+    scanf("%d",&n);
+    int x,y,t;
+    for(i=0; i<n; i++)
+    {
+        scanf("%d %d %d",&x,&y,&t);
+        m[x][y]=min(t,m[x][y]);
+        if(x>0)
+        {
+            m[x-1][y]=min(t,m[x-1][y]);
+        }
+        if(x<MAX-1)
+        {
+            m[x+1][y]=min(t,m[x+1][y]);
+        }
+        if(y>0)
+        {
+            m[x][y-1]=min(t,m[x][y-1]);
+        }
+        if(y<MAX-1)
+        {
+            m[x][y+1]=min(t,m[x][y+1]);
+        }
+    }
+    printf("%d\n",bfs());
+    return 0;
+}
 
 int main()
 
@@ -245,3 +340,4 @@ int main()
     return 0;
 
 }
+超时一方面是因为cin，cout，还有就是if判断太多，改成for之后就好了
