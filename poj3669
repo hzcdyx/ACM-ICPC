@@ -1,0 +1,247 @@
+上面这种方案不过，不知道哪里超时
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+using namespace std;
+typedef pair<int,int> p;
+const int MAX=300;
+int m[350][350];
+struct node
+{
+    int x;
+    int y;
+    int t;
+    node(int x,int y,int t):x(x),y(y),t(t)
+    {}
+};
+queue<node> a;
+int bfs()
+{
+    if(m[0][0]==0)
+    {
+        return -1;
+    }
+    else
+    {
+        node t(0,0,0);
+        a.push(t);
+        while(!a.empty())
+        {
+            node c=a.front();
+            a.pop();
+//            cout<<c.x<<c.y<<endl;
+            if(m[c.x][c.y]==1100)
+            {
+                return c.t;
+            }
+            m[c.x][c.y]=c.t;
+            if(c.x>0&&((c.t+1)<m[c.x-1][c.y]))
+            {
+
+                a.push(node(c.x-1,c.y,c.t+1));
+            }
+            if(c.y>0&&((c.t+1)<m[c.x][c.y-1]))
+            {
+                a.push(node(c.x,c.y-1,c.t+1));
+            }
+            if((c.t+1)<m[c.x+1][c.y])
+            {
+                if(c.x+1<MAX)
+                {
+                    a.push(node(c.x+1,c.y,c.t+1));
+                }
+            }
+            if((c.t+1)<m[c.x][c.y+1])
+            {
+                if(c.y+1<MAX)
+                {
+                    a.push(node(c.x,c.y+1,c.t+1));
+                }
+            }
+        }
+    }
+    return -1;
+}
+int main()
+{
+    int c,l,i,j,v,res=0,n,temp;
+    fill(m[0],m[0]+350*350,1100);
+    cin>>n;
+    int x[n],y[n],t[n];
+    for(i=0; i<n; i++)
+    {
+        cin>>x[i]>>y[i]>>t[i];
+        m[x[i]][y[i]]=min(t[i],m[x[i]][y[i]]);
+        if(x[i]>0)
+        {
+            m[x[i]-1][y[i]]=min(t[i],m[x[i]-1][y[i]]);
+        }
+        if(x[i]<MAX-1)
+        {
+            m[x[i]+1][y[i]]=min(t[i],m[x[i]+1][y[i]]);
+        }
+        if(y[i]>0)
+        {
+            m[x[i]][y[i]-1]=min(t[i],m[x[i]][y[i]-1]);
+        }
+        if(y[i]<MAX-1)
+        {
+            m[x[i]][y[i]+1]=min(t[i],m[x[i]][y[i]+1]);
+        }
+    }
+    cout<<bfs();
+    return 0;
+}
+下面的方案是可以过的
+
+#include <cstdio>
+
+#include <cstdlib>
+
+#include <iostream>
+
+#include <stack>
+
+#include <queue>
+
+#include <algorithm>
+
+#include <cstring>
+
+#include <cmath>
+
+#include <vector>
+
+#include <bitset>
+
+#include <list>
+
+#include <sstream>
+
+#include <set>
+
+#include <functional>
+
+using namespace std;
+
+ 
+
+#define INT_MAX 1 << 30
+
+#define MAX 400
+
+typedef long long ll;
+
+int n;
+
+struct node{
+
+    int x;
+
+    int y;
+
+    int t;
+
+}s,current;
+
+queue<node>q;//寻找最短时间时层层推进
+
+int map[MAX][MAX];//存储时间
+
+int dir[5][2] = {{0,0},{0,1},{0,-1},{1,0},{-1,0}};//坐标的拓展
+
+ 
+
+int bfs()//从坐标原点到MAX处层层前进
+
+{
+
+    if(map[0][0] == 0)  return -1;
+
+    if(map[0][0] == -1) return 0;
+
+    s.x = s.y = s.t = 0;
+
+    q.push(s);
+
+    while (!q.empty()){
+
+        current = q.front();
+
+        q.pop();
+
+        for (int i = 0; i < 5; i += 1){//故伎重演，扩展每一层
+
+            s.x = current.x+dir[i][0];
+
+            s.y = current.y+dir[i][1];
+
+            s.t = current.t+1;
+
+            if(s.x < 0||s.x > MAX||s.y < 0||s.y > MAX)  continue;
+
+            if(map[s.x][s.y] == -1) return s.t;
+
+            if(s.t >= map[s.x][s.y])  continue;
+
+            map[s.x][s.y] = s.t;
+
+            q.push(s);
+
+        }
+
+    }
+
+    return -1;
+
+}
+
+ 
+
+void in()
+
+{
+
+    memset(map,-1,sizeof(map));
+
+    scanf("%d",&n);
+
+    while(n--){
+
+        int x,y,t;
+
+        scanf("%d%d%d",&x,&y,&t);
+
+        for (int i = 0; i < 5; i += 1){//扩展功能，map存放每个流星落点附近点的时间最小值
+
+            int x1 = x+dir[i][0];
+
+            int y1 = y+dir[i][1];
+
+            if(x1 < 0||x1 >= MAX||y1 < 0||y1 >= MAX)  continue;
+
+            if(map[x1][y1] == -1)    map[x1][y1] = t;
+
+            else   map[x1][y1] = min(map[x1][y1],t);
+
+        }
+
+    }
+
+}
+
+ 
+
+int main()
+
+{
+
+    in();
+
+    printf("%d\n",bfs());
+
+    return 0;
+
+}
