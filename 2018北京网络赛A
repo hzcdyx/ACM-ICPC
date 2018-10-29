@@ -1,0 +1,147 @@
+#include <bits/stdc++.h>
+#define INF 1000000
+#define MAX 101
+using namespace std;
+typedef pair<int,int> P;
+typedef pair<P,int> PI;
+int n,m;
+int dp[MAX][MAX][10];
+char lu[MAX][MAX];
+int vis[MAX][MAX];
+int t[4]= {1,-1,0,0};
+int yo[4]= {0,0,1,-1};
+queue<pair<P,int> > a;
+bool flag=false;
+struct node
+{
+    int x;
+    int y;
+    int n;
+    int s;
+    friend bool operator<(node a,node b)
+    {
+        return a.s>b.s;
+    }
+};
+priority_queue<node> c;
+int bfs(int x,int y)
+{
+    node an;
+    node fn;
+    an.x=x;
+    an.y=y;
+    an.n=0;
+    an.s=0;
+    c.push(an);
+    while(!c.empty())
+    {
+        node bn=c.top();
+        c.pop();
+//        cout<<bn.x<<' '<<bn.y<<' '<<bn.n<<' '<<bn.s<<endl;
+        if(lu[bn.x][bn.y]=='T')
+        {
+            return bn.s;
+        }
+        dp[bn.x][bn.y][bn.n]=1;
+        for(int i=0; i<4; i++)
+        {
+            int cx=bn.x+t[i];
+            int cy=bn.y+yo[i];
+            if(cx<0||cy<0||cx>=n||cy>=m)
+            {
+                continue;
+            }
+            int cn=bn.n;
+            int cs=bn.s+1;
+            if(lu[cx][cy]=='B')
+            {
+                if(cn<5)
+                {
+                    cn=cn+1;
+                }
+            }
+            if(lu[cx][cy]=='#')
+            {
+                if(bn.n<1)
+                {
+                    continue;
+                }
+                else
+                {
+                    cn=cn-1;
+                    cs=cs+1;
+                }
+            }
+            if(lu[cx][cy]=='P')
+            {
+                cs=cs-1;
+            }
+            fn.n=cn;
+            fn.s=cs;
+            fn.x=cx;
+            fn.y=cy;
+            if(!dp[fn.x][fn.y][fn.n])
+            {
+                c.push(fn);
+                dp[fn.x][fn.y][fn.n]=1;
+            }
+        }
+    }
+    return -1;
+}
+//void bfs(int x,int y,int n)
+//{
+//    a.push(make_pair(P(x,y),n));
+//   while(!a.empty())
+//   {
+//       pair<P,int> c=a.front();
+//       a.pop();
+//       int m=c.first.first
+//   }
+//}
+
+int main()
+{
+    int i,j,sx,sy,ex,ey,res;
+    scanf("%d %d",&n,&m);
+    getchar();
+    while(n||m)
+    {
+        memset(dp,0,sizeof(dp));
+        for(i=0; i<n; i++)
+        {
+            for(j=0; j<m; j++)
+            {
+                scanf("%c",&lu[i][j]);
+
+                if(lu[i][j]=='S')
+                {
+                    sx=i;
+                    sy=j;
+                }
+                if(lu[i][j]=='T')
+                {
+                    ex=i;
+                    ey=j;
+                }
+            }
+            getchar();
+        }
+//        for(i=0;i<n;i++)
+//        {
+//            for(j=0;j<m;j++)
+//            {
+//                printf("%c",lu[i][j]);
+//            }
+//            printf("\n");
+//        }
+        while(!c.empty())
+        {
+            c.pop();
+        }
+        printf("%d\n",bfs(sx,sy));
+        scanf("%d %d",&n,&m);
+        getchar();
+    }
+    return 0;
+}
