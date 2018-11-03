@@ -1,0 +1,144 @@
+#include <bits/stdc++.h>
+using namespace std;
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+int v[110][110];
+int ans,start;
+int n,m;
+int flag[1000010];
+int prime[1000010];
+int vis[100000];
+int step[100000];
+struct node
+{
+    int n[5];
+    int timestwo;
+    int timesthree;
+    int dis;
+    node(int na,int t,int a,int d)
+    {
+        for(int i=4; i>=0; i--)
+        {
+            n[i]=na%10;
+            na/=10;
+        }
+        timestwo=t;
+        timesthree=a;
+        dis=d;
+    }
+};
+int huan(int n[],int t)
+{
+    int re=0;
+    for(int i=0; i<t; i++)
+    {
+        re+=n[i];
+        re*=10;
+    }
+    re/=10;
+    return re;
+}
+int main(int argc, char** argv)
+{
+    int i,j,k,a,b,n,m,sum=0,p,flag=0,res=-1;
+    memset(step,0,sizeof(step));
+    queue<node> c;
+    string s;
+    pair<int,char> an;
+    map<char,int> ma;
+    res=-1;
+    memset(vis,0,sizeof(vis));
+    while(!c.empty())
+    {
+        c.pop();
+    }
+    c.push(node(12345,0,0,0));
+    while(!c.empty())
+    {
+        node t=c.front();
+//            if(huan(t.n,5)==n)
+//            {
+//                res=t.dis;
+//                break;
+//            }
+
+        step[huan(t.n,5)]=t.dis;
+
+//        cout<<huan(t.n,5)<<endl;
+        vis[huan(t.n,5)]=1;
+//cout<<huan(t.n,5)<<endl;
+        c.pop();
+        for(i=0; i<4; i++)
+        {
+            node cn=t;
+            int o=cn.n[i+1];
+            cn.n[i+1]=cn.n[i];
+            cn.n[i]=o;
+            cn.dis=t.dis+1;
+//            for(j=0;j<=4;j++)
+//            {
+//                cout<<cn.n[j]<<endl;
+//            }
+            if(!vis[huan(cn.n,5)])
+            {
+                c.push(cn);
+                vis[huan(cn.n,5)]=1;
+            }
+        }
+        if(t.timestwo<=2)
+        {
+            for(i=0; i<5; i++)
+            {
+                node cn=t;
+                cn.n[i]+=1;
+                if(cn.n[i]>9)
+                {
+                    cn.n[i]%=10;
+                }
+                if(!vis[huan(cn.n,5)])
+                {
+                    cn.dis=t.dis+1;
+                    cn.timestwo=t.timestwo+1;
+                    c.push(cn);
+                    vis[huan(cn.n,5)]=1;
+                }
+            }
+        }
+        if(t.timesthree<=1)
+        {
+            for(i=0; i<5; i++)
+            {
+                node cn=t;
+                cn.n[i]*=2;
+                if(cn.n[i]>9)
+                {
+                    cn.n[i]%=10;
+                }
+                if(!vis[huan(cn.n,5)])
+                {
+                    cn.dis=t.dis+1;
+                    cn.timesthree=t.timesthree+1;
+                    c.push(cn);
+                    vis[huan(cn.n,5)]=1;
+                }
+            }
+        }
+    }
+
+    while(scanf("%d",&n)!=EOF)
+    {
+        if(n==12345)
+        {
+            cout<<0<<endl;
+        }
+        else if(step[n]==0)
+        {
+            cout<<-1<<endl;
+        }
+        else
+        {
+            cout<<step[n]<<endl;
+        }
+    }
+
+    return 0;
+}
