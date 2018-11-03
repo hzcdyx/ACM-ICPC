@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+using namespace std;
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+int v[110][110];
+int ans,start;
+int n,m;
+int flag[1000010];
+int prime[1000010];
+bool isprime(int n)
+{
+    if(n==1)
+    {
+        return false;
+    }
+    if(n==2)
+    {
+        return true;
+    }
+    for(int i=2;i*i<n;i++)
+    {
+        if(n%i==0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+int main(int argc, char** argv)
+{
+    int i,j,k,a,b,n,sum=0;
+    long long res=0,dis;
+    set<pair<int,int> > m;
+    cin>>n;
+    memset(flag,0,sizeof(flag));
+    flag[1]=1;
+    for(i=2;i<=n;i++)
+    {
+        if(!flag[i])
+        {
+            prime[sum++]=i;
+            for(j=2*i;j<=n;j+=i)
+            {
+
+                flag[j]=1;
+            }
+        }
+    }
+
+
+    for(i=3;i<=n/2;i+=2)
+    {
+       if(!flag[i])
+       {
+           if(!flag[n-i])
+           {
+             dis=lower_bound(prime,prime+sum,n-i)-lower_bound(prime,prime+sum,i)+1;
+             res+=dis;
+           }
+           else
+           {
+               dis=lower_bound(prime,prime+sum,n-i)-lower_bound(prime,prime+sum,i);
+               res+=dis;
+           }
+
+//           for(j=n-i;j>=i;j--)
+//           {
+//               if(!flag[j])
+//               {
+////                   cout<<i<<' '<<j<<endl;
+//                   res++;
+//               }
+//           }
+       }
+    }
+    if(n>=4)
+    {
+        res=res+1;
+    }
+    cout<<res;
+//    if(n>=4)
+//    {
+//        cout<<m.size()+1;
+//    }
+//    else
+//    {
+//       cout<<m.size();
+//    }
+    return 0;
+}
