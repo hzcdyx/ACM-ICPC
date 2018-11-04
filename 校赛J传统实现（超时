@@ -1,0 +1,144 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool visit[20010];
+int dis[20010];
+int n;
+struct node
+{
+    int k;//终点，标号
+    int dis;//权值，到给定点距离
+    node(int a,int b):k(a),dis(b)
+    {
+    }
+    node()
+    {
+    }
+    friend bool operator<(node a,node b)
+    {
+        return a.dis>b.dis;
+    }
+};
+vector<vector<node> > a;
+//priority_queue<node> c;
+void distela(int ay,int b)
+{
+//    while(!c.empty())
+//    {
+//        c.pop();
+//    }
+//    c.push(node(ay,0));
+//    while(!c.empty())
+//    {
+//        node an=c.top();
+//        c.pop();
+//        if(visit[an.k])
+//        {
+//            continue;
+//        }
+//        visit[an.k]=1;
+//        if(an.k==b)
+//        {
+//            return an.dis;
+//        }
+//        for(int i=0;i<a[an.k].size();i++)
+//        {
+//            int n=a[an.k][i].k;
+//            if(!visit[n])
+//            {
+//                c.push(node(n,a[an.k][i].dis+an.dis));
+//            }
+//        }
+//    }
+    memset(dis,0x3f3f3f3f,sizeof(dis));
+    int ma=INT_MAX;
+    int index=-1;
+    dis[ay]=0;
+//    cout<<ay<<' '<<visit[ay]<<endl;
+    for(int j=0; j<n; j++)
+    {
+        ma=INT_MAX;
+        index=-1;
+        for(int i=1; i<=n; i++)
+        {
+            if(!visit[i])
+            {
+                if(dis[i]<ma)
+                {
+                    index=i;
+                    ma=dis[i];
+//                            cout<<index<<endl;
+
+                }
+            }
+        }
+        visit[index]=1;
+//        cout<<index<<endl;
+        if(index==-1)
+        {
+            return ;
+        }
+        else
+        {
+            if(index==b)
+            {
+                return ;
+            }
+            else
+            {
+                for(int i=0;i<a[index].size();i++)
+                {
+                    int n=a[index][i].k;
+                    if(visit[n])
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if(dis[n]>dis[index]+a[index][i].dis)
+                        {
+                            dis[n]=dis[index]+a[index][i].dis;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return ;
+}
+int main()
+{
+    int t,i,j,q,m,b,res,flag;
+    cin>>n>>m>>q>>b;
+    memset(visit,0,sizeof(visit));
+    a.clear();
+    a.resize(n+1);
+    for(i=0; i<m; i++)
+    {
+        cin>>t>>j>>res;
+        a[t].push_back(node(j,res));
+        a[j].push_back(node(t,res));
+    }
+
+//    flag=distela(1,q);
+//    memset(visit,0,sizeof(visit));
+//    flag+=distela(q,b);
+//    memset(visit,0,sizeof(visit));
+//    flag+=distela(b,n);
+    distela(1,q);
+    flag=dis[q];
+//    cout<<flag<<endl;
+    memset(visit,0,sizeof(visit));
+    memset(dis,0x3f3f3f3f,sizeof(visit));
+    distela(q,b);
+    flag+=dis[b];
+//    cout<<flag<<endl;
+    memset(visit,0,sizeof(visit));
+    memset(dis,0x3f3f3f3f,sizeof(visit));
+    distela(b,n);
+    flag+=dis[n];
+    cout<<flag<<endl;
+    return 0;
+}
