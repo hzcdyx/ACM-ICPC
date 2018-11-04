@@ -1,0 +1,119 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+#define ma 1010
+const int inf=0x3f3f3f3f;
+int n,m;
+int dp[ma][ma];
+int vis[ma][ma];
+int step[ma][ma];
+int dir[4]= {1,-1,0,0};
+int dar[4]= {0,0,1,-1};
+struct node
+{
+    int x;
+    int y;
+    int dis;
+    node(int a,int b,int c):x(a),y(b),dis(c)
+    {
+
+    }
+    node()
+    {
+
+    }
+    friend bool operator<(node a,node b)
+    {
+        return a.dis>b.dis;
+    }
+};
+
+priority_queue<node> a;
+int flag;
+bool judge(int x,int y)
+{
+    if(x<0||y<0||x>=n||y>=m)
+    {
+        return false;
+    }
+    if(vis[x][y])
+    {
+        return false;
+    }
+    return true;
+}
+int bfs(int t,int b,int x,int y)
+{
+    a.push(node(t,b,0));
+    vis[t][b]=1;
+    while(!a.empty())
+    {
+        node c=a.top();
+        if(c.x==x&&c.y==y)
+        {
+            return c.dis;
+        }
+        vis[c.x][c.y]=1;
+        cout<<c.x<<' '<<c.y<<' '<<c.dis<<endl;
+        a.pop();
+        for(int i=0; i<4; i++)
+        {
+            node t=c;
+            t.x+=dir[i];
+            t.y+=dar[i];
+            if(!judge(t.x,t.y))
+            {
+                continue;
+            }
+            if(!dp[c.x][c.y]||!dp[t.x][t.y])
+            {
+                t.dis=c.dis+1;
+
+            }
+            if(t.dis<step[t.x][t.y])
+            {
+               a.push(t);
+               step[t.x][t.y]=t.dis;
+            }
+
+
+        }
+
+    }
+
+}
+int main()
+{
+    int t,i,k,j,b,x,y,q,flag,res=0;
+    cin>>n>>m;
+    for(i=0; i<n; i++)
+    {
+        for(j=0; j<m; j++)
+        {
+            cin>>dp[i][j];
+        }
+    }
+
+//    for(i=0;i<n;i++)
+//    {
+//       res+=upper_bound(a,a+n,a[i]+k)-a-i-1;
+//
+//
+//    }
+    cin>>q;
+    for(i=0; i<q; i++)
+    {
+        cin>>t>>b;
+        cin>>x>>y;
+        while(!a.empty())
+        {
+            a.pop();
+        }
+        memset(vis,0,sizeof(vis));
+        memset(step,inf,sizeof(step));
+        cout<<bfs(t-1,b-1,x-1,y-1)<<endl;
+    }
+
+
+    return 0;
+}
