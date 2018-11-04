@@ -1,0 +1,75 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool visit[20010];
+struct node
+{
+    int k;//终点，标号
+    int dis;//权值，到给定点距离
+    node(int a,int b):k(a),dis(b)
+    {
+    }
+    node()
+    {
+    }
+    friend bool operator<(node a,node b)
+    {
+        return a.dis>b.dis;
+    }
+};
+vector<vector<node> > a;
+priority_queue<node> c;
+int distela(int ay,int b)
+{
+    while(!c.empty())
+    {
+        c.pop();
+    }
+    c.push(node(ay,0));
+    while(!c.empty())
+    {
+        node an=c.top();
+        c.pop();
+        if(visit[an.k])
+        {
+            continue;
+        }
+        visit[an.k]=1;
+        if(an.k==b)
+        {
+            return an.dis;
+        }
+        for(int i=0;i<a[an.k].size();i++)
+        {
+            int n=a[an.k][i].k;
+            if(!visit[n])
+            {
+                c.push(node(n,a[an.k][i].dis+an.dis));
+            }
+        }
+    }
+    return 0;
+}
+int main()
+{
+    int t,i,n,j,q,m,b,res,flag;
+    cin>>n>>m>>q>>b;
+    memset(visit,0,sizeof(visit));
+    a.clear();
+    a.resize(n+1);
+    for(i=0;i<m;i++)
+    {
+        cin>>t>>j>>res;
+        a[t].push_back(node(j,res));
+        a[j].push_back(node(t,res));
+    }
+
+    flag=distela(1,q);
+    memset(visit,0,sizeof(visit));
+    flag+=distela(q,b);
+    memset(visit,0,sizeof(visit));
+    flag+=distela(b,n);
+    cout<<flag<<endl;
+    return 0;
+}
