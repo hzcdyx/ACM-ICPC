@@ -1,0 +1,98 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
+#include <string>
+#include <map>
+#include <set>
+#include <list>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <bitset>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+const int maxn=25;
+char s[maxn][maxn];
+struct node
+{
+    char c;
+    int num=0;
+}no[6];
+bool cmp(node a,node b)
+{
+    if(a.num==b.num)
+    {
+        return a.c<b.c;
+    }
+    return a.num>b.num;
+
+}
+int main()
+{
+    int i,j,n,m,res=0;
+    map<char,int> a;
+    while(scanf("%d %d",&n,&m)&&n&&m)
+    {
+        res=0;
+        a.clear();
+        for(i=1;i<=n;i++)
+        {
+           scanf("%s",s[i]+1);
+        }
+        for(i=1;i<=n;i++)
+        {
+            for(j=1;j<=m;j++)
+            {
+                a[s[i][j]]++;
+            }
+        }
+        no[0].c='A';
+        no[0].num=a['A'];
+        if(no[0].num==0)
+        {
+            res++;
+        }
+        no[1].c='G';
+        no[1].num=a['G'];
+        if(no[1].num==0)
+        {
+            res++;
+        }
+        no[2].c='C';
+        no[2].num=a['C'];
+        if(no[2].num==0)
+        {
+            res++;
+        }
+        no[3].c='D';
+        no[3].num=a['D'];
+        if(no[3].num==0)
+        {
+            res++;
+        }
+        no[4].c='E';
+        no[4].num=a['E'];
+        if(no[4].num==0)
+        {
+            res++;
+        }
+        sort(no,no+5,cmp);
+//        for(i=0;i<=4;i++)
+//        {
+//            cout<<no[i].c;
+//        }
+//        cout<<endl;
+        for(i=0;i<5-res;i++)
+        {
+           printf("%c %d",no[i].c,no[i].num);
+           if(i!=4-res)
+           {
+               printf(" ");
+           }
+        }
+        printf("\n");
+    }
+    return 0;
+}
