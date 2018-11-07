@@ -1,0 +1,171 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <cstring>
+using namespace std;
+const int maxn=2e2+10;
+int vis[maxn][maxn][6];
+char ma[maxn][maxn];
+int dir[4]= {1,-1,0,0};
+int di[4]= {0,0,1,-1};
+int d,t,n,m;
+struct node
+{
+    int x;
+    int y;
+    int o;
+    int dis;
+    node(int xx,int yy,int oo,int d):x(xx),y(yy),o(oo),dis(d)
+    {
+    }
+    node()
+    {
+    }
+    friend bool operator<(node an,node bn)
+    {
+        return an.dis>bn.dis;
+    }
+};
+priority_queue<node> a;
+bool judge(int x,int y)
+{
+    if(x<0||x>=n)
+    {
+        return false;
+    }
+    if(y<0||y>=m)
+    {
+        return false;
+    }
+
+    return true;
+}
+int bfs(int x,int y)
+{
+    while(!a.empty())
+    {
+        a.pop();
+    }
+    node c,p;
+    c.x=x;
+    c.y=y;
+    c.o=0;
+    c.dis=0;
+    a.push(c);
+    while(!a.empty())
+    {
+         c=a.top();
+        a.pop();
+
+//        cout<<c.x<<' '<<c.y<<' '<<c.o<<' '<<c.dis<<endl;
+        if(ma[c.x][c.y]=='T')
+        {
+            return c.dis;
+        }
+        if(c.x==d&&c.y==t)
+        {
+            return c.dis;
+        }
+        for(int i=0; i<4; i++)
+        {
+            p.x=c.x+dir[i];
+            p.y=c.y+di[i];
+            p.o=c.o;
+
+            if(!judge(p.x,p.y))
+            {
+                continue;
+            }
+            p.dis=c.dis+1;
+//              cout<<p.x<<' '<<p.y<<' '<<p.o<<' '<<p.dis<<endl;
+//              cout<<ma[0][0]<<endl;
+            if(ma[p.x][p.y]=='B')
+            {
+                if(p.o<5)
+                {
+                    p.o+=1;
+                }
+
+            }
+            else if(ma[p.x][p.y]=='#')
+            {
+                if(c.o<1)
+                {
+                    continue;
+                }
+                else
+                {
+                    p.o=c.o-1;
+                    p.dis+=1;
+                }
+            }
+            else if(ma[p.x][p.y]=='P')
+            {
+                p.dis-=1;
+            }
+            else
+            {
+
+            }
+//            cout<<p.x<<' '<<p.y<<' '<<p.o<<' '<<p.dis<<endl;
+            if(vis[p.x][p.y][p.o]>p.dis)
+            {
+                vis[p.x][p.y][p.o]=p.dis;
+                a.push(p);
+            }
+//            else
+//            {
+//              a.push(p);
+////              cout<<p.x<<' '<<p.y<<' '<<p.o<<' '<<p.dis<<endl;
+////              vis[p.x][p.y][p.o]=1;
+//            }
+
+        }
+    }
+    return -1;
+}
+int main()
+{
+    int i,j,res,p,q;
+    while(scanf("%d %d",&n,&m)&&n!=0&&m!=0)
+    {
+
+        memset(vis,0x3f3f3f3f,sizeof(vis));
+        for(i=0; i<n; i++)
+        {
+            getchar();
+            for(j=0; j<m; j++)
+            {
+                scanf("%c",&ma[i][j]);
+//                cin>>ma[i][j];
+                if(ma[i][j]=='S')
+                {
+                    p=i;
+                    q=j;
+                }
+                if(ma[i][j]=='T')
+                {
+                    d=i;
+                    t=j;
+                }
+            }
+
+        }
+        getchar();
+//        cout<<p<<' '<<q<<' '<<d<<' '<<t<<endl;
+//        for(i=0;i<n;i++)
+//        {
+//            for(j=0;j<m;j++)
+//            {
+//                cout<<ma[i][j];
+//
+//            }
+//            printf("\n");
+//        }
+        res=bfs(p,q);
+        printf("%d\n",res);
+
+    }
+    return 0;
+}
