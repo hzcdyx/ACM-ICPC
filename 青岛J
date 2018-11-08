@@ -1,0 +1,112 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+const int MAX=100010;
+vector<long> a;//放价钱
+//long a[MAX];
+int x,k;
+//bool suit(long long n)  //二分查找的函数，模拟一遍，当前钱数能最多买k本书时返回真
+//{
+//    int i=0;
+//    long long res=0;
+//    while(n>=0&&i<a.size())
+//    {
+//        if(n>=a[i])
+//        {
+//            n-=a[i];
+//            res+=1;
+//        }
+//        i++;
+//    }
+//    cout<<res<<' '<<k<<endl;
+//    return res<=k;
+//}
+int main()
+{
+    int i,j,t;
+    long l,r,mid,m,ma,csum=0,cindex=0,index,cmin;
+    long long sum=0;
+    scanf("%d",&t);
+    for(i=0; i<t; i++)
+    {
+        a.clear();
+        sum=0;
+        index=0;
+        cmin=10000000000;
+        scanf("%d %d",&x,&k);
+        l=k;
+        if(x==k)
+        {
+            for(j=0; j<x; j++)
+            {
+                scanf("%ld",&m);
+            }
+            printf("Richman\n");
+            continue;
+        }
+        else
+        {
+            for(j=0; j<x; j++)
+            {
+                scanf("%ld",&m);
+                if(m==0)
+                {
+                    l--;
+                }
+                else
+                {
+                    a.push_back(m);
+//                    a[index++]=m;
+                }
+            }
+        }
+        if(l<0)
+        {
+            printf("Impossible\n");
+            continue;
+        }
+        else
+        {
+            for(j=0; j<a.size(); j++)
+            {
+
+                if(j>=l)
+                    cmin = min(cmin, a[j]);
+                else
+                    sum += a[j];
+            }
+            cout<<cmin<<' '<<sum<<endl;
+            printf("%lld\n",cmin+sum-1);
+        }
+
+//        l=0;
+//        r=sum+1;
+//        ma=-1;
+//        while(l<=r)  //二分查找最大数满足要求
+//        {
+//           mid=l+(r-l)/2;
+////           cout<<mid<<' '<<l<<' '<<r<<endl;
+//           if(suit(mid))
+//           {
+//               ma=mid;
+//               l=mid+1;
+////               cout<<mid<<endl;
+//           }
+//           else
+//           {
+//               r=mid-1;
+//           }
+//        }
+//        if(ma==-1)
+//        {
+//            printf("Impossible\n");
+//        }
+//        else
+//        {
+//            printf("%ll\n",ma);
+//        }
+    }
+    return 0;
+}
