@@ -1,0 +1,112 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn=3001;
+
+struct earth
+{
+    int id;
+    int energy;
+};
+vector<earth> e;
+bool cmp(earth a,earth b)
+{
+    return a.energy>b.energy;
+}
+queue<pair<int,int>> q;
+int main()
+{
+    int i,j,n,op,m,l,r,s=0,ke;
+    earth ea;
+    scanf("%d",&n);
+    for(i=0; i<n; i++)
+    {
+        scanf("%d",&ea.energy);
+        if(i==0)
+        {
+            ke=ea.energy;
+            ea.id=i+1;
+            e.push_back(ea);
+        }
+        else if(i==n-1)
+        {
+            ea.id=i+1;
+            e.push_back(ea);
+        }
+        else
+        {
+            ea.id=i+1;
+            if(ea.energy<=ke)
+            {
+               e.push_back(ea);
+            }
+        }
+
+    }
+    if(e[0].energy<=e[e.size()-1].energy)
+    {
+        printf("-1");
+    }
+    else
+    {
+        sort(e.begin(),e.end(),cmp);
+        for(i=0; i<e.size(); i++)
+        {
+            if(e[i].id==1)
+            {
+                l=i;
+            }
+            if(e[i].id==n)
+            {
+                r=i;
+            }
+        }
+//        cout<<l<<' '<<r<<endl;
+        op=l;
+        q.push(make_pair(e[l].energy,l));
+        while(op<r)
+        {
+            op=op+1;
+            while(!q.empty())
+            {
+                int temp=q.front().first;
+                int te=q.front().second;
+//                cout<<temp<<' '<<te<<endl;
+                if(te<op)
+                {
+                    q.pop();
+                    q.push(make_pair(temp,op));
+                    temp=temp^e[op].energy;
+//                    cout<<temp<<' '<<op<<endl;
+                    q.push(make_pair(temp,op));
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        while(!q.empty())
+        {
+            int temp=q.front().first;
+            int te=q.front().second;
+//            cout<<temp<<' '<<te<<endl;
+            if(te==r)
+            {
+                if(temp>s)
+                {
+                    s=temp;
+                }
+            }
+            q.pop();
+        }
+        if(s==0)
+        {
+            printf("-1");
+        }
+        else
+        {
+            printf("%d",s);
+        }
+    }
+    return 0;
+}
