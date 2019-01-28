@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn=31010;
+int dp[maxn];
+struct earth
+{
+    int id;
+    int energy;
+};
+vector<earth> e;
+bool cmp(earth a,earth b)
+{
+    return a.energy>b.energy;
+}
+queue<pair<int,int>> q;
+int main()
+{
+    int i,j,n,op,m,l,r,s=0,ke;
+    earth ea;
+    scanf("%d",&n);
+    memset(dp,0,sizeof(dp));
+    for(i=0; i<n; i++)
+    {
+        scanf("%d",&ea.energy);
+        if(i==0)
+        {
+            ke=ea.energy;
+            ea.id=i+1;
+            e.push_back(ea);
+        }
+        else if(i==n-1)
+        {
+            ea.id=i+1;
+            e.push_back(ea);
+        }
+        else
+        {
+            ea.id=i+1;
+            if(ea.energy<=ke)
+            {
+                e.push_back(ea);
+            }
+        }
+
+    }
+    if(e[0].energy<=e[e.size()-1].energy)
+    {
+        printf("-1");
+    }
+    else
+    {
+        sort(e.begin(),e.end(),cmp);
+        for(i=0; i<e.size(); i++)
+        {
+            if(e[i].id==1)
+            {
+                l=i;
+            }
+            if(e[i].id==n)
+            {
+                r=i;
+            }
+        }
+//        cout<<l<<' '<<r<<endl;
+
+        dp[e[l].energy^e[r].energy]=1;
+        for(j=l+1; j<r; j++)
+        {
+            for(i=31009; i>0; i--)
+            {
+                if(dp[i]==1)
+                {
+                    dp[i^e[j].energy]=1;
+                }
+            }
+        }
+
+        for(i=31009;i>0;i--)
+        {
+            if(dp[i]==1)
+            {
+                cout<<i<<endl;
+                break;
+
+            }
+        }
+        if(i==0)
+        {
+            cout<<-1<<endl;
+        }
+    }
+    return 0;
+}
