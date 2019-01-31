@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+const int maxn=30005;
+int father[maxn];
+int dis[maxn];
+int sum[maxn];
+bool check(int a,int b)//b是不是a的老板
+{
+    int t=a;
+    while(father[t]!=t)
+    {
+        if(father[t]==b)
+        {
+            return true;
+        }
+        t=father[t];
+    }
+    return false;
+}
+int findf(int x)
+{
+    int a=x;
+    while(x!=father[x])
+    {
+        x=father[x];
+        if(x!=father[x])
+        {
+            dis[x]+=dis[father[x]];
+            cout<<x<<' '<<dis[x]<<endl;
+            sum[x]=sum[father[x]];
+        }
+    }
+    int z=a;
+    while(a!=father[a])
+    {
+        a=father[a];
+        father[z]=x;
+    }
+
+    return x;
+}
+int ff(int x)
+{
+    int a=father[x];
+    if(a!=x)
+    {
+        father[x]=ff(a);
+        dis[x]+=dis[a];
+        sum[x]=sum[father[x]];
+    }
+    return father[a];
+}
+void unio(int x,int y)
+{
+    int a=ff(x);
+    int b=ff(y);
+
+    father[b]=a;
+    dis[b]=dis[a]+sum[a];
+    sum[a]+=sum[b];
+
+    sum[b]=sum[a];
+
+
+
+}
+int main()
+{
+    int i,n,m,j,a,b,p;
+    char c;
+    bool flag=false;
+    cin>>m;
+    memset(dis,0,sizeof(dis));
+    memset(sum,0,sizeof(sum));
+    for(i=1; i<=maxn; i++)
+    {
+        father[i]=i;
+        sum[i]=1;
+    }
+    for(i=0; i<m; i++)
+    {
+        cin>>c>>a>>b;
+        if(c=='M')
+        {
+           unio(a,b);
+        }
+        else
+        {
+            if(ff(a)!=ff(b))
+            {
+                cout<<-1<<endl;
+            }
+            else
+            {
+
+                cout<<abs(dis[a]-dis[b])-1<<endl;
+            }
+        }
+
+
+    }
+
+    return 0;
+}
